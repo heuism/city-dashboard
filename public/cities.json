@@ -1,0 +1,7 @@
+[
+  { "city": "Melbourne", "temp": 10 },
+  { "city": "Sydney", "temp": 20 },
+  { "city": "Ho Chi Minh", "temp": 30 },
+  { "city": "Adelaide", "temp": 10 },
+  { "city": "Queensland", "temp": 25 }
+]
