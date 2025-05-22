@@ -53,6 +53,9 @@ function App() {
     TempCategory | "All"
   >("All");
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const grouped: Record<TempCategory, City[]> = cities.reduce((acc, curr) => {
     const cat = categorize(curr.temp);
     acc[cat] = [...(acc[cat] || []), curr];
@@ -125,13 +128,29 @@ function App() {
   };
 
   useEffect(() => {
-    fetch("/cities.json")
-      .then((res) => res.json())
-      .then((data) => setCities(data));
+    fetch("http://localhost:8000/cities")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Failed to fetch: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setCities(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(err);
+        setLoading(false);
+      });
   }, []);
 
   return (
     <div style={{ padding: "1rem" }}>
+      {loading && <p>Loading cities...</p>}
+      {error && <p style={{ color: "red" }}>Error: {error}</p>}
+      {!loading && !error && cities.length === 0 && <p>No cities found.</p>}
       {["All", "Hot", "Warm", "Cool"].map((cat) => (
         <button
           key={cat}
@@ -179,7 +198,7 @@ function App() {
             >
               {emojiMap[category as TempCategory]}
               {category} (Average Temperature:{" "}
-              {avgTemp(cities.map(({ temp }) => temp))})
+              {avgTemp(filtered[category].map(({ temp }) => temp))})
             </h2>
             <ul>
               {filtered[category].map((ci, idx) => (
