@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 
+import { Box, Flex } from "@chakra-ui/react";
 import "./App.css";
 
 ChartJS.register(
@@ -225,33 +226,47 @@ function App() {
   }, [minTempValue]);
 
   return (
-    <div style={{ padding: "1rem" }}>
+    <Flex
+      width={{ base: "100%", md: "full" }}
+      direction={"column"}
+      style={{ padding: "1rem" }}
+    >
       {loading && <p>Loading cities...</p>}
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
       {!loading && !error && cities.length === 0 && <p>No cities found.</p>}
-      {["All", "Hot", "Warm", "Cool"].map((cat) => (
-        <button
-          key={cat}
-          onClick={() => setSelectedCategory(cat as TempCategory | "All")}
-          style={{
-            marginRight: "0.5rem",
-            padding: "0.5rem 1rem",
-            border: "none",
-            borderRadius: "4px",
-            backgroundColor: selectedCategory === cat ? "#333" : "#eee",
-            color: selectedCategory === cat ? "white" : "black",
-            cursor: "pointer",
-          }}
-        >
-          {cat}
-        </button>
-      ))}
+      <Flex
+        justifyContent={"center"}
+        direction={"row"}
+        style={{ padding: "1rem" }}
+      >
+        {["All", "Hot", "Warm", "Cool"].map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setSelectedCategory(cat as TempCategory | "All")}
+            style={{
+              marginRight: "0.5rem",
+              padding: "0.5rem 1rem",
+              border: "none",
+              borderRadius: "4px",
+              backgroundColor: selectedCategory === cat ? "#333" : "#eee",
+              color: selectedCategory === cat ? "white" : "black",
+              cursor: "pointer",
+            }}
+          >
+            {cat}
+          </button>
+        ))}
+      </Flex>
       <TextInput
         label={"Minimum temperature:"}
         value={minTempValue}
         onChange={onMinTempChange}
       />
-      <div>
+      <Flex
+        align={"center"}
+        justifyContent={"space-between"}
+        paddingTop={"12px"}
+      >
         <TextInput
           label={"New city:"}
           value={newCity}
@@ -275,25 +290,25 @@ function App() {
         >
           +Add City And Temp
         </button>
-      </div>
+      </Flex>
 
       <h1>🌤️ City Temperature Dashboard</h1>
       {orderedCategories
         .filter((cat) => filtered[cat])
         .map((category) => (
-          <div
+          <Box
+            marginTop={"8"}
             key={category}
-            style={{
-              backgroundColor:
-                category === "Hot"
-                  ? "lightcoral"
-                  : category === "Cool"
-                  ? "lightblue"
-                  : "lemonchiffon",
-              padding: "1rem",
-              borderRadius: "8px",
-              marginBottom: "1rem",
-            }}
+            bg={
+              category === "Hot"
+                ? "lightcoral"
+                : category === "Cool"
+                ? "lightblue"
+                : "lemonchiffon"
+            }
+            p="4"
+            borderRadius="md"
+            mb="4"
           >
             <h2
               style={{
@@ -314,10 +329,10 @@ function App() {
                 <li key={ci.city + idx}>{ci.city}</li>
               ))}
             </ul>
-          </div>
+          </Box>
         ))}
       <Bar data={chartData} options={chartOptions} />
-    </div>
+    </Flex>
   );
 }
 
