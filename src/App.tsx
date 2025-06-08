@@ -10,7 +10,15 @@ import {
 import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 
-import { Box, Flex } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Field,
+  Flex,
+  Input,
+  SimpleGrid,
+  Stack,
+} from "@chakra-ui/react";
 import "./App.css";
 
 ChartJS.register(
@@ -55,19 +63,14 @@ type TextInputProps = {
 
 function TextInput({ label, value, onChange }: TextInputProps) {
   return (
-    <div className="p-4">
-      <label htmlFor="input" className="block text-sm font-medium mb-2">
-        {label}
-      </label>
-      <input
-        id="input"
-        type="text"
+    <Field.Root p={4}>
+      <Field.Label>{label}</Field.Label>
+      <Input
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="border border-gray-300 rounded p-2 w-full"
         placeholder="Type here..."
       />
-    </div>
+    </Field.Root>
   );
 }
 
@@ -234,38 +237,34 @@ function App() {
       {loading && <p>Loading cities...</p>}
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
       {!loading && !error && cities.length === 0 && <p>No cities found.</p>}
-      <Flex
+      <Stack
         justifyContent={"center"}
         direction={"row"}
         style={{ padding: "1rem" }}
       >
         {["All", "Hot", "Warm", "Cool"].map((cat) => (
-          <button
+          <Button
             key={cat}
             onClick={() => setSelectedCategory(cat as TempCategory | "All")}
-            style={{
-              marginRight: "0.5rem",
-              padding: "0.5rem 1rem",
-              border: "none",
-              borderRadius: "4px",
-              backgroundColor: selectedCategory === cat ? "#333" : "#eee",
-              color: selectedCategory === cat ? "white" : "black",
-              cursor: "pointer",
-            }}
+            colorScheme={selectedCategory === cat ? "blue" : "gray"}
+            variant={selectedCategory === cat ? "solid" : "subtle"}
+            bg={selectedCategory === cat ? "blue" : "gray"}
+            color={"white"}
           >
             {cat}
-          </button>
+          </Button>
         ))}
-      </Flex>
+      </Stack>
       <TextInput
         label={"Minimum temperature:"}
         value={minTempValue}
         onChange={onMinTempChange}
       />
-      <Flex
-        align={"center"}
-        justifyContent={"space-between"}
-        paddingTop={"12px"}
+      <SimpleGrid
+        columns={{ base: 1, md: 3 }}
+        mt={4}
+        borderSpacing={4}
+        gridTemplateColumns={"2fr 2fr 1fr"}
       >
         <TextInput
           label={"New city:"}
@@ -277,20 +276,16 @@ function App() {
           value={newTemp}
           onChange={onNewTempChange}
         />
-        <button
+        <Button
           key={"addNewCityAndTemp"}
           onClick={() => addNewCityAndTemp(newCity, newTemp)}
-          style={{
-            marginRight: "0.5rem",
-            padding: "0.5rem 1rem",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
+          variant={"outline"}
+          bg={"green.200"}
+          color={"white"}
         >
           +Add City And Temp
-        </button>
-      </Flex>
+        </Button>
+      </SimpleGrid>
 
       <h1>🌤️ City Temperature Dashboard</h1>
       {orderedCategories
