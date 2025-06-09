@@ -10,15 +10,8 @@ import {
 import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 
-import {
-  Box,
-  Button,
-  Field,
-  Flex,
-  Input,
-  SimpleGrid,
-  Stack,
-} from "@chakra-ui/react";
+import { FormControl, FormLabel } from "@chakra-ui/form-control";
+import { Box, Button, Flex, Input, SimpleGrid, Stack } from "@chakra-ui/react";
 import "./App.css";
 
 ChartJS.register(
@@ -63,14 +56,16 @@ type TextInputProps = {
 
 function TextInput({ label, value, onChange }: TextInputProps) {
   return (
-    <Field.Root p={4}>
-      <Field.Label>{label}</Field.Label>
-      <Input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder="Type here..."
-      />
-    </Field.Root>
+    <Box p={4}>
+      <FormControl>
+        <FormLabel>{label}</FormLabel>
+        <Input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Type here..."
+        />
+      </FormControl>
+    </Box>
   );
 }
 
@@ -276,15 +271,18 @@ function App() {
           value={newTemp}
           onChange={onNewTempChange}
         />
-        <Button
-          key={"addNewCityAndTemp"}
-          onClick={() => addNewCityAndTemp(newCity, newTemp)}
-          variant={"outline"}
-          bg={"green.200"}
-          color={"white"}
-        >
-          +Add City And Temp
-        </Button>
+        <Flex align="end">
+          <Button
+            key={"addNewCityAndTemp"}
+            onClick={() => addNewCityAndTemp(newCity, newTemp)}
+            variant={"outline"}
+            bg={"green.200"}
+            color={"black"}
+            marginBottom={1}
+          >
+            +Add City And Temp
+          </Button>
+        </Flex>
       </SimpleGrid>
 
       <h1>🌤️ City Temperature Dashboard</h1>
